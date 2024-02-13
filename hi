@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Day Invitation</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            background-color: #fbd3e9;
+        }
+
+        #container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #content {
+            text-align: center;
+        }
+
+        #yesButton, #noButton {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            margin: 10px;
+            border-radius: 5px;
+            outline: none;
+            display: none;
+        }
+
+        #yesButton.active, #noButton.active {
+            display: block;
+        }
+
+        #yesButton {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        #noButton {
+            background-color: #e74c3c;
+            color: white;
+            transition: transform 0.5s ease;
+        }
+
+        #partyPoppers {
+            display: none;
+            animation: party 4s ease-out;
+        }
+
+        @keyframes party {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 2;
+            animation: fadeIn 4s forwards;
+        }
+
+        @keyframes fadeIn {
+            0%, 50%, 100% {
+                opacity: 0;
+            }
+            25%, 75% {
+                opacity: 1;
+            }
+        }
+
+        #waitingText {
+            display: none;
+            font-size: 18px;
+            margin-top: 20px;
+            animation: fadeIn 2s forwards, stayVisible 30s forwards 2s;
+        }
+
+        @keyframes stayVisible {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        #timer {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        #yesButton:hover, #noButton:hover {
+            transform: scale(1.1);
+        }
+
+        #noButton.moved:hover {
+            transform: translateX(50vw) scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="content">
+            <h1>Will you be my Valentine?</h1>
+            <p>The buttons activate at 11:11, for me to get a response.</p>
+            <button id="yesButton" class="active" onclick="showParty()">Yes</button>
+            <button id="noButton" class="active" onclick="showPopup()" onmouseover="moveNoButton()" >No</button>
+            <div id="partyPoppers">
+                🎉🎉🎉
+                <p>I'll meet you there on 14th at 1:10, my 11:11. If you come, I'll be the happiest person on earth who'll make you the happiest person on earth. If you don't wish to come, I'll still go and with no hard feelings, I'll wish you luck.</p>
+            </div>
+            <div id="popup" class="popup">
+                <p>Please try 'Yes' once 😊</p>
+                <button onclick="closePopup()">Okay</button>
+            </div>
+            <div id="waitingText">
+                <p>I'll wait for you... 💖</p>
+            </div>
+            <div id="timer"></div>
+        </div>
+    </div>
+
+    <script>
+        let noButtonHoverCount = 0;
+
+        // Countdown timer to February 12th, 2024, 11:11
+        var countDownActivateButtons = new Date("Feb 12, 2024 11:11:00").getTime();
+
+        var activateButtons = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = countDownActivateButtons - now;
+
+            if (distance <= 0) {
+                clearInterval(activateButtons);
+                document.getElementById("yesButton").classList.add("active");
+                document.getElementById("noButton").classList.add("active");
+                document.getElementById("yesButton").style.display = "block";
+                document.getElementById("noButton").style.display = "block";
+            }
+        }, 1000);
+
+        function showParty() {
+            document.getElementById('partyPoppers').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('partyPoppers').style.display = 'none';
+            }, 4000);
+            showWaitingText();
+        }
+
+        function showPopup() {
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('noButton').style.transform = 'translateX(50px)';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('noButton').style.transform = 'translateX(0)';
+        }
+
+        function showWaitingText() {
+            document.getElementById('waitingText').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('waitingText').style.display = 'none';
+            }, 30000);
+        }
+
+        function moveNoButton() {
+            if (noButtonHoverCount < 6) {
+                noButtonHoverCount++;
+            } else {
+                document.getElementById('noButton').classList.remove('moved');
+            }
+        }
+
+        // Countdown timer to February 14th, 2024
+        var countDownDate = new Date("Feb 14, 2024 00:00:00").getTime();
+
+        var x = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = countDownDate - now;
+
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("timer").innerHTML = "Time until Feb 14, 2024: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("timer").innerHTML = "It's Valentine's Day! 🎉";
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
